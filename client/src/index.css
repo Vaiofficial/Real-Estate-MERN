@@ -5,7 +5,7 @@
 /* CODE FOR HOVER EFFECT IN HEADER LINKS */
 .nav-link {
   position: relative;
-  color: #374151; /* Adjust the color to your preference */
+  color: #374151;
   transition: color 0.3s ease;
 }
 .nav-link::before {
@@ -15,11 +15,8 @@
   left: 0;
   width: 0;
   height: 2px;
-  background-color: #ffcc70; /* Adjust the color to your preference */
+  background-color: #ffcc70;
   transition: width 0.3s ease;
-}
-.nav-link:hover {
-  color: #1a202c; /* Adjust the color to your preference */
 }
 .nav-link:hover::before {
   width: 100%;
