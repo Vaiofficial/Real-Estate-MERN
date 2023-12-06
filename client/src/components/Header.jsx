@@ -8,7 +8,7 @@ export default function Header() {
   return (
     //good for seo if we write tags like this.
     <header className="bg-white shadow-lg">
-      <div className="flex justify-between items-center max-w-6xl mx-auto p-3">
+      <div className="flex justify-between items-center max-w-6xl mx-auto p-5">
         <Link to={"/"}>
           <h1 className="font-bold text-sm sm:text-xl flex-wrap">
             <span className="text-slate-500">Rao</span>
@@ -26,19 +26,19 @@ export default function Header() {
         </form>
         <ul className="flex gap-6 ">
           <Link to={"/"} className="nav-link">
-            <li className="hidden sm:inline text-slate-700 font-semibold">
+            <li className="hidden sm:inline text-slate-700 font-semibold text-lg">
               Home
             </li>
           </Link>
 
           <Link to={"/about"} className="nav-link">
-            <li className="hidden sm:inline text-slate-700 font-semibold">
+            <li className="hidden sm:inline text-slate-700 font-semibold text-lg">
               About
             </li>
           </Link>
 
           <Link to={"/sign-in"} className="nav-link">
-            <li className="hidden sm:inline text-slate-700 font-semibold">
+            <li className="hidden sm:inline text-slate-700 font-semibold text-lg">
               Sign in
             </li>
           </Link>

@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+
+/* BACKGROUND COLOR OF THE WEBSITE */
+body{
+  background-color: #f7f2ab;
+}
+
 /* CODE FOR HOVER EFFECT IN HEADER LINKS */
 .nav-link {
   position: relative;
