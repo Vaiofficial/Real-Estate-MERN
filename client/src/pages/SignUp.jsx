@@ -9,19 +9,19 @@ export default function SignUp() {
         <input
           type="text"
           placeholder="username"
-          className="border rounded-lg p-3 outline-none"
+          className="border rounded-lg p-3 focus:outline-none"
           id="username"
         />
         <input
           type="text"
           placeholder="email"
-          className="border rounded-lg p-3 outline-none"
+          className="border rounded-lg p-3 focus:outline-none"
           id="username"
         />
         <input
           type="text"
           placeholder="password"
-          className="border rounded-lg p-3 outline-none"
+          className="border rounded-lg p-3 focus:outline-none"
           id="username"
         />
         {/* Signup button */}
