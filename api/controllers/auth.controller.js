@@ -1,5 +1,6 @@
 import User from "../models/user.model.js";
 import bcryptjs from "bcryptjs";
+import {errorHandler} from "../utils/error.js";
 import Jwt from "jsonwebtoken";
 
 export const signup = async (req, res, next) => {
@@ -19,10 +20,12 @@ export const signup = async (req, res, next) => {
 export const signin = async (req, res, next) => {
   const { email, password } = req.body;
   try {
+    //checking email & password in mongodb
     const validUser = await User.findOne({ email });
-    if (!validUser) return next(errorHandler(404, "User not found"));
+    if (!validUser) return next(errorHandler(404,'User not found'));
     const ValidPassword = bcryptjs.compareSync(password, validUser.password);
-    if (!ValidPassword) return next(errorHandler(401, "Wrong Credentials"));
+    if (!ValidPassword) return next(errorHandler(401, 'Wrong Credentials'));
+    //if every thing is fine means email & password then we sign a token using jwt package.
     const token = Jwt.sign({ id: validUser._id }, process.env.JWT_SECRET);
     //password ko even hash form mai bhi nahi bhejna hai so ...rest ko bhej rhe except password
     const {password: pass , ...rest} = validUser._doc;
@@ -48,3 +51,9 @@ export const signin = async (req, res, next) => {
 //7. jwt ka use kar rhe hai yaha data ko client and server ke beech securely transfer ke liye.
 
 //8. httpOnly ke karan koi third party ye cookie ko access nahi kar skta h.
+
+
+//8. const token = Jwt.sign({ id: validUser._id }, process.env.JWT_SECRET);
+//in this line there are two parameters , first one is something unique about the user that is 'id' which we know is unique in every single mongodb user data and second one is jwt secret key, which we defined in .env file.
+
+//9. so we are storing that token inside a cookie
