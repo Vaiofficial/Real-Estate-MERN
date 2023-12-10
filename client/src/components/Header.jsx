@@ -1,10 +1,9 @@
 import { FaSearch } from "react-icons/fa";
-import Home from "../pages/Home";
-import About from "../pages/About";
-import SignIn from "../pages/SignIn";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 export default function Header() {
+  const { currentUser } = useSelector((state) => state.user);
   return (
     //good for seo if we write tags like this.
     <header className="bg-white shadow-lg">
@@ -37,10 +36,19 @@ export default function Header() {
             </li>
           </Link>
 
-          <Link to={"/sign-in"} className="nav-link">
-            <li className="hidden sm:inline text-slate-700 font-semibold text-lg">
-              Sign in
-            </li>
+          {/* if currentUser is true then its profile will be shown in the header section , if currentUser is false then SIGNIN text will be shown. */}
+          <Link to={"/profile"} className="nav-link ">
+            {currentUser ? (
+              <img
+                className="rounded-full w-7 h-7  object-cover"
+                src={currentUser.avatar}
+                alt="profile"
+              />
+            ) : (
+              <li className="hidden sm:inline text-slate-700 font-semibold text-lg">
+                Sign in
+              </li>
+            )}
           </Link>
         </ul>
       </div>
