@@ -16,13 +16,14 @@ export default function Profile() {
   const [fileUploadError, setFileUploadError] = useState(false);
   const [FormData, setFormData] = useState({});
 
-  //so jab bhi file mai changes hoongi handlefileupload function trigger hoga.
+  //so jab bhi file mai changes hoongi handlefileupload ccfunction trigger hoga.
   useEffect(() => {
     if (file) {
       handleFileUpload(file);
     }
   }, [file]);
 
+  //it is trigger when file is selected , uses firebase storage ti upload the file
   const handleFileUpload = (file) => {
     const storage = getStorage(app);
     const fileName = new Date().getTime() + file.name;
@@ -41,6 +42,7 @@ export default function Profile() {
         setFileUploadError(true);
       },
       () => {
+        //upload successful hua to download url of uploaded file is retrieved using formData state variable.
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) =>
           setFormData({ ...FormData, avatar: downloadURL })
         );
