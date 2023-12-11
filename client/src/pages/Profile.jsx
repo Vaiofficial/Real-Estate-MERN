@@ -1,20 +1,29 @@
 import { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   getDownloadURL,
   getStorage,
   ref,
   uploadBytesResumable,
 } from "firebase/storage";
+import {
+  updateUserStart,
+  updateUserSuccess,
+  updateUserFailure,
+} from "../redux/user/userSlice";
 import { app } from "../firebase";
 
 export default function Profile() {
   const fileRef = useRef(null);
-  const { currentUser } = useSelector((state) => state.user);
+  const { currentUser , loading , error } = useSelector((state) => state.user);
   const [file, setFile] = useState(undefined);
   const [filePerc, setFilePerc] = useState(0);
   const [fileUploadError, setFileUploadError] = useState(false);
   const [FormData, setFormData] = useState({});
+  const [updateSuccess, setUpdateSuccess] = useState(false);
+  const dispatch = useDispatch();
+
+  console.log(FormData);
 
   //so jab bhi file mai changes hoongi handlefileupload ccfunction trigger hoga.
   useEffect(() => {
@@ -50,11 +59,38 @@ export default function Profile() {
     );
   };
 
+  const handleChange = (e) => {
+    setFormData({ ...FormData, [e.target.id]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      dispatch(updateUserStart());
+      const res = await fetch(`/api/user/update/${currentUser._id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(FormData),
+      });
+      const data = await res.json();
+      if (data.success === false) {
+        dispatch(updateUserFailure(data.message));
+        return;
+      }
+      dispatch(updateUserFailure(data.message));
+      setUpdateSuccess(true)
+    } catch (error) {
+      dispatch(updateUserFailure(error.message));
+    }
+  };
+
   return (
     <div className="max-w-lg m-auto p-3">
       <h1 className="text-3xl font-bold text-center my-7 ">Profile</h1>
 
-      <form className="flex flex-col gap-4">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <input
           onChange={(e) => setFile(e.target.files[0])}
           hidden={true}
@@ -71,11 +107,15 @@ export default function Profile() {
         ></img>
         <p className="text-center">
           {fileUploadError ? (
-            <span className="text-red-700">Error Image Upload (Image must be less than 2 mb)</span>
+            <span className="text-red-700">
+              Error Image Upload (Image must be less than 2 mb)
+            </span>
           ) : filePerc > 0 && filePerc < 100 ? (
             <span className="text-slate-700">{`Uploading ${filePerc}%`}</span>
           ) : filePerc == 100 ? (
-            <span className="text-green-600 font-medium">Image Successfully Uploaded!</span>
+            <span className="text-green-600 font-medium">
+              Image Successfully Uploaded!
+            </span>
           ) : (
             ""
           )}
@@ -85,22 +125,27 @@ export default function Profile() {
           type="text"
           id="username"
           placeholder="username"
+          defaultValue={currentUser.username}
+          onChange={handleChange}
           className="p-3 border rounded-lg focus:outline-none"
         ></input>
         <input
-          type="text"
+          type="email"
           id="email"
           placeholder="email"
+          defaultValue={currentUser.email}
+          onChange={handleChange}
           className="p-3 border rounded-lg focus:outline-none"
         ></input>
         <input
-          type="text"
+          type="password"
           id="password"
           placeholder="password"
+          onChange={handleChange}
           className="p-3 border rounded-lg focus:outline-none"
         ></input>
-        <button className="p-3 bg-slate-700 rounded-lg text-white uppercase hover:opacity-95 disabled:opacity-80">
-          Update Profile
+        <button disabled ={loading} className="p-3 bg-slate-700 rounded-lg text-white uppercase hover:opacity-95 disabled:opacity-80">
+          {loading ? 'Loading...' : 'Update'}
         </button>
       </form>
 
@@ -112,6 +157,10 @@ export default function Profile() {
           Sign out
         </span>
       </div>
+
+      <p className="text-red-700 mt-5 text-center font-medium"> {error ? error: ''}</p>
+      <p className="text-green-600 mt-5 text-center font-medium">{updateSuccess? 'User is updated successfully' : ''}</p>
+
     </div>
   );
 }
