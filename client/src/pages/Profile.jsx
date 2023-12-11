@@ -10,12 +10,15 @@ import {
   updateUserStart,
   updateUserSuccess,
   updateUserFailure,
+  deleteUserFailure,
+  deleteUserStart,
+  deleteUserSuccess,
 } from "../redux/user/userSlice";
 import { app } from "../firebase";
 
 export default function Profile() {
   const fileRef = useRef(null);
-  const { currentUser , loading , error } = useSelector((state) => state.user);
+  const { currentUser, loading, error } = useSelector((state) => state.user);
   const [file, setFile] = useState(undefined);
   const [filePerc, setFilePerc] = useState(0);
   const [fileUploadError, setFileUploadError] = useState(false);
@@ -80,9 +83,26 @@ export default function Profile() {
         return;
       }
       dispatch(updateUserFailure(data.message));
-      setUpdateSuccess(true)
+      setUpdateSuccess(true);
     } catch (error) {
       dispatch(updateUserFailure(error.message));
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      dispatch(deleteUserStart());
+      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+      if (data.success == false) {
+        dispatch(deleteUserFailure(data.message));
+        return;
+      }
+      dispatch(deleteUserSuccess(data));
+    } catch (error) {
+      dispatch(deleteUserFailure(error.message));
     }
   };
 
@@ -144,13 +164,19 @@ export default function Profile() {
           onChange={handleChange}
           className="p-3 border rounded-lg focus:outline-none"
         ></input>
-        <button disabled ={loading} className="p-3 bg-slate-700 rounded-lg text-white uppercase hover:opacity-95 disabled:opacity-80">
-          {loading ? 'Loading...' : 'Update'}
+        <button
+          disabled={loading}
+          className="p-3 bg-slate-700 rounded-lg text-white uppercase hover:opacity-95 disabled:opacity-80"
+        >
+          {loading ? "Loading..." : "Update"}
         </button>
       </form>
 
       <div className="flex justify-between mt-5">
-        <span className="text-red-700 cursor-pointer font-medium">
+        <span
+          onClick={handleDelete}
+          className="text-red-700 cursor-pointer font-medium"
+        >
           Delete Account
         </span>
         <span className="text-red-700 cursor-pointer font-medium">
@@ -158,9 +184,16 @@ export default function Profile() {
         </span>
       </div>
 
-      <p className="text-red-700 mt-5 text-center font-medium"> {error ? error: ''}</p>
-      <p className="text-green-600 mt-5 text-center font-medium">{updateSuccess? 'User is updated successfully' : ''}</p>
 
+      {/* error / update etc notification message */}
+
+      <p className="text-red-700 mt-5 text-center font-medium">
+        {" "}
+        {error ? error : ""}
+      </p>
+      <p className="text-green-600 mt-5 text-center font-medium">
+        {updateSuccess ? "User is updated successfully" : ""}
+      </p>
     </div>
   );
 }

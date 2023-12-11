@@ -1,5 +1,5 @@
 import express from "express";
-import  { test ,  updateUser } from "../controllers/user.controller.js";
+import  { deleteUser, test ,  updateUser } from "../controllers/user.controller.js";
 import { verifyToken } from "../utils/verifyUser.js";
 
 
@@ -9,7 +9,8 @@ const router = express.Router();
 //ye test aarha hai usecontroller file se , yaha bhi function likh skte the but aise likhna is a good practice.
 router.get('/test', test);
 //so yha 2 functions pass kiye h , phle verification hoga aur phir user update  
-router.post('/update/:id' , verifyToken ,updateUser); 
+router.post('/update/:id' , verifyToken ,updateUser);
+router.delete('/delete/:id', verifyToken , deleteUser);
 
 export default router;
 
