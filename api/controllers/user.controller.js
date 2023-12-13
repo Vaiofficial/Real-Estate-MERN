@@ -1,6 +1,7 @@
 import bcryptjs from "bcryptjs";
 import User from "../models/user.model.js";
 import { errorHandler } from "../utils/error.js";
+import Listing from "../models/listing.model.js";
 
 export const test = (req, res) => {
   res.json({
@@ -51,6 +52,23 @@ export const deleteUser = async (req, res, next) => {
     next(error);
   }
 };
+
+export const getUserListings = async(req, res, next)=>
+{
+  //so phle verify kar rhe user ki id match kar rhi ya nahi , dusre kli listing nahi  milni chahiye
+  if (req.user.id === req.params.id){
+  try {
+    const listings  = await Listing.find({userRef:req.params.id});
+    res.status(200).json(listings);
+  } catch (error) {
+    next(error);
+  }
+}
+  else{
+    return next(errorHandler(401 , 'You can only view your own listings'));
+  }
+  
+}
 
 //data ko update hum set method ka use karke karenge , kyuki aisa ho skta hai ki user skuch hi data ko change karna chahata hai , like bas password or bas email etc.
 //set method check karta hai ki kya data change hua h agar yes to update karenge else ignore
