@@ -33,7 +33,6 @@ export default function Profile() {
   const [userListings, setUserListings] = useState([]);
 
   console.log(FormData);
-  console.log("the listing data is here:");
 
   //so jab bhi file mai changes hoongi handlefileupload ccfunction trigger hoga.
   useEffect(() => {
@@ -145,6 +144,8 @@ export default function Profile() {
     }
   };
 
+
+  //DELETE YOUR LISTINGS LISTS FUNCTION
   const handleListDelete = async(listingId) => {
     try {
       const res = await fetch(`/api/listing/delete/${listingId}`, {
@@ -163,6 +164,10 @@ export default function Profile() {
       console.log(error.message)
     }
   };
+
+
+
+
 
   return (
     <div className="max-w-lg m-auto p-3">
