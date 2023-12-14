@@ -144,9 +144,8 @@ export default function Profile() {
     }
   };
 
-
   //DELETE YOUR LISTINGS LISTS FUNCTION
-  const handleListDelete = async(listingId) => {
+  const handleListDelete = async (listingId) => {
     try {
       const res = await fetch(`/api/listing/delete/${listingId}`, {
         method: "DELETE",
@@ -158,16 +157,12 @@ export default function Profile() {
 
       //agar sab kuch shi hai phir delete karo , using filter method.
       setUserListings((prev) =>
-        prev.filter((listing) => listing._id!== listingId)
+        prev.filter((listing) => listing._id !== listingId)
       );
     } catch (error) {
-      console.log(error.message)
+      console.log(error.message);
     }
   };
-
-
-
-
 
   return (
     <div className="max-w-lg m-auto p-3">
@@ -310,9 +305,11 @@ export default function Profile() {
                 >
                   Delete
                 </button>
-                <button className="text-green-700 uppercase font-semibold ">
-                  Edit
-                </button>
+                <Link to={`/update-listing/${listing._id}`}>
+                  <button className="text-green-700 uppercase font-semibold ">
+                    Edit
+                  </button>
+                </Link>
               </div>
             </div>
           ))}
