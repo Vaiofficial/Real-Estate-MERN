@@ -43,6 +43,7 @@ export default function CreateListing() {
       const listingId = params.listingId;  
       const res = await fetch(`/api/listing/get/${listingId}`);
       const data = await res.json();
+      console.log(data)
       if (data.success === false) {
         console.log(data.message);
         return;
