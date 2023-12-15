@@ -142,7 +142,6 @@ export default function CreateListing() {
       setFormData({ ...formData, [e.target.id]: e.target.value });
     }
   };
-
   //FORM SUBMIT FUNCTION
 
   const handleSubmit = async (e) => {
