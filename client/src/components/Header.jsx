@@ -1,9 +1,32 @@
+import { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 
 export default function Header() {
   const { currentUser } = useSelector((state) => state.user);
+  const [searchTerm, setSearchTerm] = useState("");
+  const navigate = useNavigate();
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    //to get url information
+    const urlParams = new URLSearchParams(window.location.search);
+    //sabhi information milne ke baad ab search term ko change kar rhe hai.
+    urlParams.set("searchTerm", searchTerm);
+    //phle urlparam ko string mai convert kar rhe , number vgera  bhi ho skta h.
+    const searchQuery = urlParams.toString();
+    navigate(`/search?${searchQuery}`);
+  };
+
+  //agar url mai change karenge to search bar mai bhi change hoga.
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+    const searchTermFromUrl = urlParams.get("searchTerm");
+    if (searchTermFromUrl) {
+      setSearchTerm(searchTermFromUrl);
+    }
+  }, [location.search]);
+
   return (
     //good for seo if we write tags like this.
     <header className="bg-white shadow-lg">
@@ -15,14 +38,23 @@ export default function Header() {
           </h1>
         </Link>
 
-        <form className="bg-slate-100 p-3 rounded-lg flex items-center">
+        <form
+          onSubmit={handleSubmit}
+          className="bg-slate-100 p-3 rounded-lg flex items-center"
+        >
           <input
             className="bg-transparent focus:outline-none sm:w-64"
             type="text"
             placeholder="Search..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           ></input>
-          <FaSearch />
+
+          <button>
+            <FaSearch className="text-slate-600" />
+          </button>
         </form>
+
         <ul className="flex gap-6 ">
           <Link to={"/"} className="nav-link">
             <li className="hidden sm:inline text-slate-700 font-semibold text-lg">
