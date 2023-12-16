@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { json, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import ListingItem from "../components/ListingItem";
 
 export default function Search() {
   const navigate = useNavigate();
+  const location = useLocation();
   // search page mai jo search button hai.
   //so initially value set kiye hai ab button click ke according url channge karna hoga.
   const [sidebardata, setSidebardata] = useState({
@@ -16,10 +18,10 @@ export default function Search() {
   });
 
   const [loading, setLoading] = useState(false);
-  const [Listing, setListing] = useState([]);
-  console.log(Listing);
+  const [listings, setListing] = useState([]);
+  const [showMore, setshowMore] = useState(false);
 
-    //so jab url change hota hai , to search term dikhna chahaiye search bar mai , jo bhi search kiye the , or url change hoga to vo change ui mai bhi dikhega.
+  //so jab url change hota hai , to search term dikhna chahaiye search bar mai , jo bhi search kiye the , or url change hoga to vo change ui mai bhi dikhega.
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
     const searchTermFromUrl = urlParams.get("searchTerm");
@@ -53,11 +55,24 @@ export default function Search() {
     //ab jo bhi select & search kiye uske according ab result dena hoga.
     const fetchListings = async () => {
       setLoading(true);
-      const searchQuery = urlParams.toString();
-      const res = await fetch(`/api/listing/get?${searchQuery}`);
-      const data = await res.json();
-      setListing(data);
-      setLoading(false);
+      setshowMore(false);
+
+      try {
+        const searchQuery = urlParams.toString();
+        const res = await fetch(`/api/listing/get?${searchQuery}`);
+        const data = await res.json();
+
+        //show more functionality implementation
+        if (data.length > 8) {
+          setshowMore(true);
+        } else {
+          setshowMore(false);
+        }
+        setListing(data);
+        setLoading(false);
+      } catch (error) {
+        console.log("Error!Not able to fetch data" , error);
+      }
     };
 
     fetchListings();
@@ -107,6 +122,23 @@ export default function Search() {
     urlParams.set("order", sidebardata.order);
     const searchQuery = urlParams.toString();
     navigate(`/search?${searchQuery}`);
+  };
+
+  const onShowMoreClick = async () => {
+    const numberOfListings = listings.length;
+    //like agr total 9 hai so ab next start 10 hoga
+    const startIndex = numberOfListings;
+    const urlParams = new URLSearchParams(location.search);
+    urlParams.set("startIndex", startIndex);
+    const searchQuery = urlParams.toString();
+    const res = await fetch(`/api/listing/get?${searchQuery}`);
+    const data = await res.json();
+    if (data.length < 9) {
+      setshowMore(false);
+    }
+
+    //new and previous listings ko ak array mai store kar diye.
+    setListing([...listings, ...data]);
   };
 
   return (
@@ -226,8 +258,33 @@ export default function Search() {
 
       {/* LISTING RESULT SECTION */}
 
-      <div>
+      <div className="flex-1">
         <h1 className="text-3xl font-semibold p-3">Listing results:</h1>
+        <div className="p-7 gap-4 flex flex-wrap">
+          {/* jab koi listing hi ni mili */}
+          {!loading && listings.length === 0 && (
+            <p className="text-xl text-slate-700">No Listing Found!</p>
+          )}
+          {/* jab load hora hai. */}
+          {loading && <p className="text-center w-full">Loading...</p>}
+          {/* so agar listing available hai , loading bhi nahi h so listings show karo */}
+          {listings &&
+            !loading &&
+            listings.map((listing) => (
+              <ListingItem key={listing._id} listing={listing} />
+            ))}
+
+          {/* SHOW MORE BUTTON */}
+
+          {showMore && (
+            <button
+              onClick={onShowMoreClick}
+              className="text-green-700 font-semibold hover:underline p-7 w-full text-center"
+            >
+              Show more
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
