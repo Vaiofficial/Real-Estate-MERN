@@ -26,10 +26,6 @@ export default function Listing() {
   const params = useParams();
   const { currentUser } = useSelector((state) => state.user);
 
-
-  {console.log("currentUser:", currentUser._id)}
-{console.log("listing.useRef:", listing?.userRef)}
-
   useEffect(() => {
     const fetchListing = async () => {
       try {

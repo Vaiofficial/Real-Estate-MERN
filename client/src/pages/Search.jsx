@@ -71,7 +71,8 @@ export default function Search() {
         setListing(data);
         setLoading(false);
       } catch (error) {
-        console.log("Error!Not able to fetch data" , error);
+        console.log("Error!Not able to fetch data", error);
+        setLoading(false);
       }
     };
 
@@ -88,7 +89,7 @@ export default function Search() {
     }
 
     if (e.target.id === "searchTerm") {
-      setSidebardata({ ...sidebardata, searchTerm: e.target.value });
+      setSidebardata({ ...sidebardata, searchTerm: e.target.value.trim() });
     }
 
     if (
@@ -112,6 +113,7 @@ export default function Search() {
   //so search karne par url bhi change hoga and searching hogi.
   const handleSubmit = (e) => {
     e.preventDefault();
+    //new instance of urlsearchparams
     const urlParams = new URLSearchParams();
     urlParams.set("searchTerm", sidebardata.searchTerm);
     urlParams.set("type", sidebardata.type);
@@ -268,8 +270,8 @@ export default function Search() {
           {/* jab load hora hai. */}
           {loading && <p className="text-center w-full">Loading...</p>}
           {/* so agar listing available hai , loading bhi nahi h so listings show karo */}
-          {listings &&
-            !loading &&
+          {!loading &&
+            listings &&
             listings.map((listing) => (
               <ListingItem key={listing._id} listing={listing} />
             ))}
