@@ -73,9 +73,12 @@ export default function Home() {
           We have wide range of properties for you to choose from.
         </div>
         <Link className="" to={"/search"}>
-          <button className="bg-white py-2 px-5 font-semibold text-slate-800 rounded-lg text-center">
-            Explore now...
-          </button>
+        <button class="relative flex justify-center items-center rounded-lg bg-blue-900 font-montserrat shadow-md overflow-hidden focus:outline-none hover:after:right-0 after:w-full after:h-full after:bg-yellow-500 after:absolute after:transition-all after:duration-500 after:ease-in-out after:left-auto after:right-full">
+  <span class="z-10 text-white text-center inline-block w-full py-3 px-6 text-lg font-semibold tracking-wider transition duration-500 ease-in-out hover:text-blue-900 hover:scale-95">
+    Explore now...
+  </span>
+</button>
+
         </Link>
       </div>
 
@@ -89,8 +92,9 @@ export default function Home() {
               <div
                 style={{
                   background: `url(${listing.imageUrls[0]}) center no-repeat`,
-                  backgroundSize: "cover" , 
-                  boxShadow: "rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset"
+                  backgroundSize: "cover",
+                  boxShadow:
+                    "rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset",
                 }}
                 className="h-[500px]"
               ></div>

@@ -34,7 +34,7 @@ export default function Header() {
         <Link to={"/"}>
           <h1 className="font-bold text-sm sm:text-xl flex-wrap">
             <span className="text-slate-500">Rao</span>
-            <span className="text-orange-500">EState</span>
+            <span className="text-orange-500">Homes&EStates</span>
           </h1>
         </Link>
 
